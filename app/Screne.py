@@ -5,7 +5,7 @@ from tkinter import ttk
 
 from PIL import Image, ImageTk
 
-import Image_Manager
+from app.Image_Manager import ImageManager
 
 
 class SceneApp:
@@ -13,7 +13,7 @@ class SceneApp:
         self.master = master
         self.master.title("Сцена с изображением")
 
-        self.image_manager = Image_Manager.ImageManager()
+        self.image_manager = ImageManager()
 
         self.canvas = tk.Canvas(self.master, width=400, height=300)
         self.canvas.pack(pady=10)
@@ -46,9 +46,3 @@ class SceneApp:
                 print("Ошибка: Изображение с указанным ID не найдено.")
         else:
             print("Ошибка: Введите ID изображения.")
-
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = SceneApp(root)
-    root.mainloop()

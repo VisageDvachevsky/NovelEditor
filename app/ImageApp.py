@@ -2,7 +2,7 @@ import hashlib
 import tkinter as tk
 from tkinter import ttk, filedialog
 
-import Image_Manager
+from app.Image_Manager import ImageManager
 
 
 class ImageApp:
@@ -10,7 +10,7 @@ class ImageApp:
         self.master = master
         self.master.title("Управление изображениями")
 
-        self.image_manager = Image_Manager.ImageManager()
+        self.image_manager = ImageManager()
 
         self.label = ttk.Label(self.master, text="Введите ID изображения:")
         self.label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
