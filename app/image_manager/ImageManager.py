@@ -3,7 +3,7 @@ import shutil
 
 from loguru import logger
 
-from app.image_manager.Crypto import Crypto
+from app.image_manager.Crypt import Crypt
 from app.image_manager.create_db import create_db
 
 
@@ -11,7 +11,7 @@ class ImageManager:
     def __init__(self, db_name="image_database.db", key_file="key.key"):
         self._images = create_db(db_name).image
         self._db_name = db_name
-        self._crypto = Crypto(key_file)
+        self._crypto = Crypt(key_file)
 
     def add_image(self, image_path, image_hash):
         if not os.path.isfile(image_path):
