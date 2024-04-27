@@ -1,7 +1,5 @@
 import os
-from io import BytesIO
 
-from PIL import Image
 from cryptography.fernet import Fernet
 
 from app.image_manager.create_db import create_db
@@ -70,20 +68,3 @@ class ImageManager:
         with open(self.db_name, "rb") as f_src:
             with open(backup_file, "wb") as f_dest:
                 f_dest.write(f_src.read())
-
-
-class ProjectBuilder:
-    def __init__(self, image_manager, project_name):
-        self.image_manager = image_manager
-        self.project_name = project_name
-
-    def build_project(self, image_id):
-        image_data = self.image_manager.get_image_data(image_id)
-        if image_data:
-            try:
-                img = Image.open(BytesIO(image_data))
-                img.show()
-            except Exception as e:
-                print(f"Ошибка при отображении изображения: {e}")
-        else:
-            print(f"Ошибка: Изображение с айди {image_id} не найдено в базе данных.")
