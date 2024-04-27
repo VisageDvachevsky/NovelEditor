@@ -1,5 +1,5 @@
 import os
-
+import shutil
 
 from app.image_manager.Crypto import Crypto
 from app.image_manager.create_db import create_db
@@ -39,14 +39,9 @@ class ImageManager:
             print(f"Ошибка: Изображение не найдено в базе данных.")
             return None
 
-    def get_image_hashes(self):
-        return [res.image_hash for res in self._images.select()]
-
     def remove_image(self, image_hash):
         self._images.delete().where(self._images.image_hash == image_hash).execute()
         print(f"Изображение удалено из базы данных.")
 
     def backup_database(self, backup_file):
-        with open(self._db_name, "rb") as f_src:
-            with open(backup_file, "wb") as f_dest:
-                f_dest.write(f_src.read())
+        shutil.copyfile(self._db_name, backup_file)
