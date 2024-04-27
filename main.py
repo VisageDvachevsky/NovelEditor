@@ -1,26 +1,13 @@
 import sys
-import tkinter as tk
 
-from app.Screne import SceneApp
-from app.ImageApp import ImageApp
+from app.visual import run
 
 
 def main(args: list[str]) -> None:
     if len(args) < 2:
-        print("Не указан режим выполнения")
+        print("Не хватает параметров!")
 
-    match args[1]:
-        case "scene":
-            app = SceneApp
-        case "image_app":
-            app = ImageApp
-        case _:
-            print("Неизвестный режим выполнения")
-            return
-
-    root = tk.Tk()
-    app(root)
-    root.mainloop()
+    run(args[1])
 
 
 if __name__ == "__main__":

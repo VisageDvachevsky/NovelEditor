@@ -1,5 +1,4 @@
 import hashlib
-import tkinter as tk
 from tkinter import ttk, filedialog
 
 from app.Image_Manager import ImageManager
@@ -80,9 +79,3 @@ class ImageApp:
     def backup_database(self):
         self.image_manager.backup_database("backup.db")
         print("Создана резервная копия базы данных.")
-
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = ImageApp(root)
-    root.mainloop()

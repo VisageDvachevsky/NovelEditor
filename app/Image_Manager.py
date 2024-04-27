@@ -112,14 +112,3 @@ class ProjectBuilder:
                 print(f"Ошибка при отображении изображения: {e}")
         else:
             print(f"Ошибка: Изображение с айди {image_id} не найдено в базе данных.")
-
-
-# image_manager = ImageManager()
-# image_manager.add_image(r'C:\Users\Ya\Pictures\qwe.png')
-
-# project_builder = ProjectBuilder(image_manager, "VisualNovel")
-
-# image_ids = image_manager.get_image_ids()
-# print("Список идентификаторов изображений:", image_ids)
-
-# project_builder.build_project("f34d0c8dac18b6219b2cf382314f5a158937cfa7b785ab9cc1e989d62d7a0757")
