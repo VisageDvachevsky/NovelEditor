@@ -10,7 +10,7 @@ def run(mode: str | None) -> None:
     match mode:
         case "scene":
             app = SceneApp
-        case "image":
+        case "image_app":
             app = ImageApp
 
         case _:

@@ -1,21 +1,20 @@
 import os
-import sqlite3
 from io import BytesIO
 
 from PIL import Image
 from cryptography.fernet import Fernet
 
+from app.image_manager.create_db import create_db
+
 
 class ImageManager:
     def __init__(self, db_name="image_database.db", key_file="key.key"):
+        self.images = create_db(db_name).image
         self.db_name = db_name
         self.key = self.load_or_create_key(key_file)
-        self.conn = sqlite3.connect(self.db_name)
-        self.create_table()
 
-        os.chmod(self.db_name, 0o600)
-
-    def load_or_create_key(self, key_file):
+    @staticmethod
+    def load_or_create_key(key_file):
         if os.path.exists(key_file):
             with open(key_file, "rb") as f:
                 return f.read()
@@ -25,16 +24,6 @@ class ImageManager:
                 f.write(key)
             return key
 
-    def create_table(self):
-        cursor = self.conn.cursor()
-        cursor.execute(
-            """CREATE TABLE IF NOT EXISTS images (
-                            image_hash TEXT PRIMARY KEY,
-                            image_data BLOB
-                          )"""
-        )
-        self.conn.commit()
-
     def add_image(self, image_path, image_hash):
         if not os.path.isfile(image_path):
             print(f"Ошибка: Файл изображения '{image_path}' не найден.")
@@ -43,39 +32,30 @@ class ImageManager:
         with open(image_path, "rb") as f:
             image_bytes = f.read()
 
-            cursor = self.conn.cursor()
-            cursor.execute(
-                "INSERT INTO images (image_hash, image_data) VALUES (?, ?)",
-                (image_hash, self.encrypt_data(image_bytes)),
+            (
+                self.images.insert(
+                    image_hash=image_hash, image_data=self.encrypt_data(image_bytes)
+                )
+                .on_conflict_replace()
+                .execute()
             )
-            self.conn.commit()
+
             print(f"Изображение добавлено в базу данных.")
 
     def get_image_data(self, image_hash):
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "SELECT image_data FROM images WHERE image_hash = ?", (image_hash,)
-        )
-        row = cursor.fetchone()
-        if row:
-            return self.decrypt_data(row[0])
-        else:
+        try:
+            img = self.images.get(self.images.image_hash == image_hash)
+            if img:
+                return self.decrypt_data(img.image_data)
+        except Exception as _:
             print(f"Ошибка: Изображение не найдено в базе данных.")
             return None
 
     def get_image_hashes(self):
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT image_hash FROM images")
-        rows = cursor.fetchall()
-        if rows:
-            return [row[0] for row in rows]
-        else:
-            return []
+        return [res.image_hash for res in self.images.select()]
 
     def remove_image(self, image_hash):
-        cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM images WHERE image_hash = ?", (image_hash,))
-        self.conn.commit()
+        self.images.delete().where(self.images.image_hash == image_hash).execute()
         print(f"Изображение удалено из базы данных.")
 
     def encrypt_data(self, data):
@@ -87,14 +67,9 @@ class ImageManager:
         return cipher.decrypt(encrypted_data)
 
     def backup_database(self, backup_file):
-        self.conn.close()
         with open(self.db_name, "rb") as f_src:
             with open(backup_file, "wb") as f_dest:
                 f_dest.write(f_src.read())
-        self.conn = sqlite3.connect(self.db_name)
-
-    def __del__(self):
-        self.conn.close()
 
 
 class ProjectBuilder:

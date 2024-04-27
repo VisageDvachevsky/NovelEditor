@@ -1,7 +1,7 @@
 import hashlib
 from tkinter import ttk, filedialog
 
-from app.Image_Manager import ImageManager
+from app.image_manager.ImageManager import ImageManager
 
 
 class ImageApp:

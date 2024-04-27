@@ -5,7 +5,7 @@ from tkinter import ttk
 
 from PIL import Image, ImageTk
 
-from app.Image_Manager import ImageManager
+from app.image_manager.ImageManager import ImageManager
 
 
 class SceneApp:
