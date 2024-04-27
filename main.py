@@ -1,11 +1,13 @@
 import sys
 
+from loguru import logger
+
 from app.visual import run
 
 
 def main(args: list[str]) -> None:
     if len(args) < 2:
-        print("Не хватает параметров!")
+        logger.error("Не хватает параметров!")
 
     run(args[1])
 

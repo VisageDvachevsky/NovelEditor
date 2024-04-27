@@ -1,9 +1,10 @@
 import hashlib
 import tkinter as tk
+
 from io import BytesIO
 from tkinter import ttk
-
 from PIL import Image, ImageTk
+from loguru import logger
 
 from app.image_manager.ImageManager import ImageManager
 
@@ -41,8 +42,8 @@ class SceneApp:
                 self.canvas.create_image(200, 150, image=photo)
                 self.canvas.image = photo
 
-                print("Изображение загружено успешно.")
+                logger.info("Изображение загружено успешно.")
             else:
-                print("Ошибка: Изображение с указанным ID не найдено.")
+                logger.error("Изображение с указанным ID не найдено.")
         else:
-            print("Ошибка: Введите ID изображения.")
+            logger.error("Введите ID изображения.")

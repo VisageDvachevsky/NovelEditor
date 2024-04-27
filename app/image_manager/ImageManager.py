@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from loguru import logger
+
 from app.image_manager.Crypto import Crypto
 from app.image_manager.create_db import create_db
 
@@ -13,7 +15,7 @@ class ImageManager:
 
     def add_image(self, image_path, image_hash):
         if not os.path.isfile(image_path):
-            print(f"Ошибка: Файл изображения '{image_path}' не найден.")
+            logger.error(f"Файл изображения '{image_path}' не найден.")
             return
 
         with open(image_path, "rb") as f:
@@ -28,7 +30,7 @@ class ImageManager:
                 .execute()
             )
 
-            print(f"Изображение добавлено в базу данных.")
+            logger.info(f"Изображение добавлено в базу данных.")
 
     def get_image_data(self, image_hash):
         try:
@@ -36,12 +38,12 @@ class ImageManager:
             if img:
                 return self._crypto.decrypt_data(img.image_data)
         except Exception as _:
-            print(f"Ошибка: Изображение не найдено в базе данных.")
+            logger.error(f"Изображение не найдено в базе данных.")
             return None
 
     def remove_image(self, image_hash):
         self._images.delete().where(self._images.image_hash == image_hash).execute()
-        print(f"Изображение удалено из базы данных.")
+        logger.info(f"Изображение удалено из базы данных.")
 
     def backup_database(self, backup_file):
         shutil.copyfile(self._db_name, backup_file)

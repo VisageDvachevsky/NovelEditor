@@ -1,5 +1,7 @@
 import hashlib
+
 from tkinter import ttk, filedialog
+from loguru import logger
 
 from app.image_manager.ImageManager import ImageManager
 
@@ -61,21 +63,21 @@ class ImageApp:
             if hasattr(self, "selected_image_path") and self.selected_image_path:
                 hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
                 self.image_manager.add_image(self.selected_image_path, hashed_id)
-                print(f"Изображение с ID {image_id} добавлено.")
+                logger.info(f"Изображение с ID {image_id} добавлено.")
             else:
-                print("Ошибка: Выберите изображение.")
+                logger.error("Выберите изображение.")
         else:
-            print("Ошибка: Введите ID изображения.")
+            logger.error("Введите ID изображения.")
 
     def delete_image(self):
         image_id = self.id_entry.get()
         if image_id:
             hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
             self.image_manager.remove_image(hashed_id)
-            print(f"Изображение с ID {image_id} удалено.")
+            logger.info(f"Изображение с ID {image_id} удалено.")
         else:
-            print("Ошибка: Введите ID изображения.")
+            logger.error("Введите ID изображения.")
 
     def backup_database(self):
         self.image_manager.backup_database("backup.db")
-        print("Создана резервная копия базы данных.")
+        logger.info("Создана резервная копия базы данных.")

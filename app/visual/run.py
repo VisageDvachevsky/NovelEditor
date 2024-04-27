@@ -1,12 +1,12 @@
+import tkinter as tk
+
+from loguru import logger
+
 from app.visual.ImageApp import ImageApp
 from app.visual.SceneApp import SceneApp
-import tkinter as tk
 
 
 def run(mode: str | None) -> None:
-    if mode is None:
-        print("Не указан режим выполнения")
-
     match mode:
         case "scene":
             app = SceneApp
@@ -14,7 +14,7 @@ def run(mode: str | None) -> None:
             app = ImageApp
 
         case _:
-            print(f"Неизвестный режим выполнения '{mode}'")
+            logger.error(f"Неизвестный режим выполнения '{mode}'")
             return
 
     root = tk.Tk()
