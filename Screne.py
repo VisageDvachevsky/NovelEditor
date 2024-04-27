@@ -1,22 +1,26 @@
-import tkinter as tk
-from tkinter import ttk, filedialog
-from PIL import Image, ImageTk
 import hashlib
-import os
+import tkinter as tk
 from io import BytesIO
+from tkinter import ttk
+
+from PIL import Image, ImageTk
+
 import Image_Manager
+
 
 class SceneApp:
     def __init__(self, master):
         self.master = master
         self.master.title("Сцена с изображением")
 
-        self.image_manager = Image_Manager.ImageManager()  
+        self.image_manager = Image_Manager.ImageManager()
 
         self.canvas = tk.Canvas(self.master, width=400, height=300)
         self.canvas.pack(pady=10)
 
-        self.load_button = ttk.Button(self.master, text="Загрузить изображение", command=self.load_image)
+        self.load_button = ttk.Button(
+            self.master, text="Загрузить изображение", command=self.load_image
+        )
         self.load_button.pack(pady=5)
 
         self.id_label = ttk.Label(self.master, text="Введите ID изображения:")
@@ -35,13 +39,14 @@ class SceneApp:
                 photo = ImageTk.PhotoImage(image)
 
                 self.canvas.create_image(200, 150, image=photo)
-                self.canvas.image = photo 
+                self.canvas.image = photo
 
                 print("Изображение загружено успешно.")
             else:
                 print("Ошибка: Изображение с указанным ID не найдено.")
         else:
             print("Ошибка: Введите ID изображения.")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
