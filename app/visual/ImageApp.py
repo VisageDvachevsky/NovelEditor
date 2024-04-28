@@ -40,13 +40,6 @@ class ImageApp:
             row=3, column=0, columnspan=2, padx=10, pady=5, sticky="we"
         )
 
-        self.backup_button = ttk.Button(
-            self.master, text="Создать резервную копию", command=self.backup_database
-        )
-        self.backup_button.grid(
-            row=4, column=0, columnspan=2, padx=10, pady=5, sticky="we"
-        )
-
         for child in self.master.winfo_children():
             child.grid_configure(padx=5, pady=5)
 
@@ -77,7 +70,3 @@ class ImageApp:
             logger.info(f"Изображение с ID {image_id} удалено.")
         else:
             logger.error("Введите ID изображения.")
-
-    def backup_database(self):
-        self.image_manager.backup_database("backup.db")
-        logger.info("Создана резервная копия базы данных.")
