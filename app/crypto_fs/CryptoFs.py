@@ -1,6 +1,6 @@
 import pickle
-from pathlib import Path
 
+from pathlib import Path
 from Crypto.Random import get_random_bytes
 from loguru import logger
 from uuid_extensions import uuid7
