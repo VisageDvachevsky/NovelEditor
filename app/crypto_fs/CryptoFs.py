@@ -104,8 +104,8 @@ class CryptoFs:
         if file.type == "dir":
             dir: Dir = self._fs.read_pickle(file.uid, file.key)
             if dir is not None:
-                for filename in dir:
-                    self._remove(dir[filename])
+                for dir_file in dir.values():
+                    self._remove(dir_file)
 
         self._fs.remove(file.uid)
 
