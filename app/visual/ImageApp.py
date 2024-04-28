@@ -1,5 +1,3 @@
-import hashlib
-
 from tkinter import ttk, filedialog
 from loguru import logger
 
@@ -40,13 +38,6 @@ class ImageApp:
             row=3, column=0, columnspan=2, padx=10, pady=5, sticky="we"
         )
 
-        self.backup_button = ttk.Button(
-            self.master, text="Создать резервную копию", command=self.backup_database
-        )
-        self.backup_button.grid(
-            row=4, column=0, columnspan=2, padx=10, pady=5, sticky="we"
-        )
-
         for child in self.master.winfo_children():
             child.grid_configure(padx=5, pady=5)
 
@@ -61,8 +52,7 @@ class ImageApp:
         image_id = self.id_entry.get()
         if image_id:
             if hasattr(self, "selected_image_path") and self.selected_image_path:
-                hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
-                self.image_manager.add_image(self.selected_image_path, hashed_id)
+                self.image_manager.add_image(self.selected_image_path, image_id)
                 logger.info(f"Изображение с ID {image_id} добавлено.")
             else:
                 logger.error("Выберите изображение.")
@@ -72,12 +62,7 @@ class ImageApp:
     def delete_image(self):
         image_id = self.id_entry.get()
         if image_id:
-            hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
-            self.image_manager.remove_image(hashed_id)
+            self.image_manager.remove_image(image_id)
             logger.info(f"Изображение с ID {image_id} удалено.")
         else:
             logger.error("Введите ID изображения.")
-
-    def backup_database(self):
-        self.image_manager.backup_database("backup.db")
-        logger.info("Создана резервная копия базы данных.")
