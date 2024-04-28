@@ -1,5 +1,3 @@
-import hashlib
-
 from tkinter import ttk, filedialog
 from loguru import logger
 
@@ -54,8 +52,7 @@ class ImageApp:
         image_id = self.id_entry.get()
         if image_id:
             if hasattr(self, "selected_image_path") and self.selected_image_path:
-                hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
-                self.image_manager.add_image(self.selected_image_path, hashed_id)
+                self.image_manager.add_image(self.selected_image_path, image_id)
                 logger.info(f"Изображение с ID {image_id} добавлено.")
             else:
                 logger.error("Выберите изображение.")
@@ -65,8 +62,7 @@ class ImageApp:
     def delete_image(self):
         image_id = self.id_entry.get()
         if image_id:
-            hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
-            self.image_manager.remove_image(hashed_id)
+            self.image_manager.remove_image(image_id)
             logger.info(f"Изображение с ID {image_id} удалено.")
         else:
             logger.error("Введите ID изображения.")

@@ -1,4 +1,3 @@
-import hashlib
 import tkinter as tk
 
 from io import BytesIO
@@ -33,8 +32,7 @@ class SceneApp:
     def load_image(self):
         image_id = self.id_entry.get()
         if image_id:
-            hashed_id = hashlib.sha256(image_id.encode()).hexdigest()
-            image_data = self.image_manager.get_image_data(hashed_id)
+            image_data = self.image_manager.get_image_data(image_id)
             if image_data:
                 image = Image.open(BytesIO(image_data))
                 photo = ImageTk.PhotoImage(image)
