@@ -116,10 +116,6 @@ class CryptoFs:
             return
 
         filename = path[-1]
-        if filename is None:
-            logger.warning(f"Файл '{path}' не существует.")
-            return
-
         file = dir[0].get(filename)
         if file is not None:
             self._remove(file)
