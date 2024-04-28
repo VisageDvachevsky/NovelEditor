@@ -1,4 +1,3 @@
-import os.path
 import pickle
 from pathlib import Path
 
@@ -6,7 +5,7 @@ from Crypto.Random import get_random_bytes
 from loguru import logger
 from uuid_extensions import uuid7
 
-from app.crypto.AES import AES
+from app.crypto_fs.AES import AES
 from app.crypto_fs.model.Dir import Dir
 from app.crypto_fs.model.File import File
 from app.crypto_fs.model.Root import Root
