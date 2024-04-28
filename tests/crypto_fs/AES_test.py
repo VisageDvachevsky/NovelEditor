@@ -1,5 +1,12 @@
+import pytest
+
 from app.crypto_fs.AES import AES
 from app.crypto_fs.utility import random_key
+
+
+@pytest.fixture
+def key():
+    return random_key()
 
 
 def test_key_size():
@@ -8,17 +15,17 @@ def test_key_size():
     assert AES.key_size == byte_size
 
 
-def test_encrypt_decrypt():
+def test_encrypt_decrypt(key):
     test_message = "Test message"
-    aes = AES(random_key())
+    aes = AES(key)
     encrypted_message = aes.encrypt(test_message.encode())
     decrypted_message = aes.decrypt(encrypted_message).decode()
     assert test_message == decrypted_message
 
 
-def test_immutability():
+def test_immutability(key):
     test_message = "Test message"
-    key = random_key()
+
     aes_r = AES(key)
     aes_l = AES(key)
 

@@ -31,7 +31,7 @@ class CryptoFs:
             file = dir.get(part)
             if file is None:
                 if not mkdir:
-                    logger.error(f"Путь '{path[:idx]}' не найден.")
+                    logger.error(f"Путь '{path[:idx+1]}' не найден.")
                     return None
 
                 file = File(type="dir")
@@ -39,7 +39,7 @@ class CryptoFs:
                 self._fs.write_bytes(uid, key, pickle.dumps(dir))
 
             if file.type != "dir":
-                logger.error(f"Путь '{path[:idx]}' не является директорией.")
+                logger.error(f"Путь '{path[:idx+1]}' не является директорией.")
                 return None
 
             uid = file.uid
