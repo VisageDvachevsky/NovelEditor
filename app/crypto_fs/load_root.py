@@ -1,10 +1,8 @@
 import pickle
 
 from pathlib import Path
-from Crypto.Random import get_random_bytes
 
 from app.crypto_fs.AES import AES
-from app.crypto_fs.CryptoFs import CryptoFs
 from app.crypto_fs.model.Root import Root
 
 
@@ -15,9 +13,9 @@ def load_root(root_file: str) -> Root:
         data = path.read_bytes()
         key = data[: AES.key_size]
         uid = pickle.loads(data[AES.key_size :])
+        res = Root(uid, key)
     else:
-        key = get_random_bytes(AES.key_size)
-        uid = CryptoFs.uuid()
-        path.write_bytes(key + pickle.dumps(uid))
+        res = Root()
+        path.write_bytes(res.key + pickle.dumps(res.uid))
 
-    return Root(uid, key)
+    return res
