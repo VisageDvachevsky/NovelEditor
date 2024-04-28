@@ -1,5 +1,3 @@
-import pickle
-
 from loguru import logger
 
 from app.crypto_fs.RawCryptoFs import RawCryptoFs
@@ -26,20 +24,20 @@ class CryptoFs:
                     return None
 
                 dir = Dir()
-                self._fs.write_bytes(uid, key, pickle.dumps(dir))
+                self._fs.write_pickle(uid, key, dir)
 
             file = dir.get(part)
             if file is None:
                 if not mkdir:
-                    logger.error(f"Путь '{path[:idx]}' не найден.")
+                    logger.error(f"Путь '{path[:idx+1]}' не найден.")
                     return None
 
                 file = File(type="dir")
                 dir[part] = file
-                self._fs.write_bytes(uid, key, pickle.dumps(dir))
+                self._fs.write_pickle(uid, key, dir)
 
             if file.type != "dir":
-                logger.error(f"Путь '{path[:idx]}' не является директорией.")
+                logger.error(f"Путь '{path[:idx+1]}' не является директорией.")
                 return None
 
             uid = file.uid
@@ -48,7 +46,7 @@ class CryptoFs:
 
         if dir is None and mkdir:
             dir = Dir()
-            self._fs.write_bytes(uid, key, pickle.dumps(dir))
+            self._fs.write_pickle(uid, key, dir)
 
         if dir is None:
             return None
@@ -98,7 +96,7 @@ class CryptoFs:
         self._fs.write_bytes(file.uid, file.key, data)
 
         dir[0][filename] = file
-        self._fs.write_bytes(dir[1], dir[2], pickle.dumps(dir[0]))
+        self._fs.write_pickle(dir[1], dir[2], dir[0])
 
     def _remove(self, file: File):
         if file.type == "dir":
@@ -116,12 +114,8 @@ class CryptoFs:
             return
 
         filename = path[-1]
-        if filename is None:
-            logger.warning(f"Файл '{path}' не существует.")
-            return
-
         file = dir[0].get(filename)
         if file is not None:
             self._remove(file)
             del dir[0][filename]
-            self._fs.write_bytes(dir[1], dir[2], pickle.dumps(dir[0]))
+            self._fs.write_pickle(dir[1], dir[2], dir[0])

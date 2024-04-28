@@ -1,4 +1,5 @@
 import pickle
+
 from pathlib import Path
 from typing import Any
 
@@ -45,6 +46,9 @@ class RawCryptoFs:
             return res
         except Exception as _:
             logger.error(f"Не удалось распаковать объект '{uid}'")
+
+    def write_pickle(self, uid: int, key: bytes, data: Any) -> None:
+        self.write_bytes(uid, key, pickle.dumps(data))
 
     def remove(self, uid: int):
         self._as_path(uid).unlink(missing_ok=True)
