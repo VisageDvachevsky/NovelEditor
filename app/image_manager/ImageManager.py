@@ -1,50 +1,31 @@
-import os
-import shutil
-
+from pathlib import Path
 from loguru import logger
 
-from app.crypto.AES import AES
-from app.crypto.load_or_create_key import load_or_create_key
-from app.image_manager.create_db import create_db
+from app.crypto_fs.CryptoFs import CryptoFs
+from app.crypto_fs.load_root import load_root
 
 
 class ImageManager:
-    def __init__(self, db_name="image_database.db", key_file="key.key"):
-        self._images = create_db(db_name).image
-        self._db_name = db_name
-        self._crypto = AES(load_or_create_key(key_file, AES.key_size))
+    def __init__(self, key_file="key.key"):
+        self._fs = CryptoFs("data", load_root(key_file))
 
     def add_image(self, image_path, image_hash):
-        if not os.path.isfile(image_path):
+        path = Path(image_path)
+        if not path.exists() or not path.is_file():
             logger.error(f"Файл изображения '{image_path}' не найден.")
             return
 
-        with open(image_path, "rb") as f:
-            image_bytes = f.read()
-
-            (
-                self._images.insert(
-                    image_hash=image_hash,
-                    image_data=self._crypto.encrypt(image_bytes),
-                )
-                .on_conflict_replace()
-                .execute()
-            )
-
-            logger.info(f"Изображение добавлено в базу данных.")
+        image_bytes = path.read_bytes()
+        self._fs.write_file(["images", image_hash], image_bytes)
+        logger.info(f"Изображение добавлено в базу данных.")
 
     def get_image_data(self, image_hash):
         try:
-            img = self._images.get(self._images.image_hash == image_hash)
-            if img:
-                return self._crypto.decrypt(img.image_data)
+            return self._fs.read_file(["images", image_hash])
         except Exception as _:
             logger.error(f"Изображение не найдено в базе данных.")
             return None
 
     def remove_image(self, image_hash):
-        self._images.delete().where(self._images.image_hash == image_hash).execute()
+        self._fs.remove(["images", image_hash])
         logger.info(f"Изображение удалено из базы данных.")
-
-    def backup_database(self, backup_file):
-        shutil.copyfile(self._db_name, backup_file)
