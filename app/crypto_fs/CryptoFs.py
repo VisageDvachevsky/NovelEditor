@@ -107,20 +107,14 @@ class CryptoFs:
 
         return dir, uid, key
 
-    def read_dir(self, path: list[str] | str, mkdir: bool = False) -> Dir | None:
-        if path is str:
-            return self.read_dir(path.split("/"))
-
+    def read_dir(self, path: list[str], mkdir: bool = False) -> Dir | None:
         res = self._read_dir(path, mkdir=mkdir)
         if res is None:
             return None
 
         return res[0]
 
-    def read_file(self, path: list[str] | str) -> bytes | None:
-        if path is str:
-            return self.read_file(path.split("/"))
-
+    def read_file(self, path: list[str]) -> bytes | None:
         dir = self.read_dir(path[:-1])
         if dir is None:
             return None
@@ -138,10 +132,7 @@ class CryptoFs:
         data = self._read_bytes(file.uid, file.key)
         return data
 
-    def write_file(self, path: list[str] | str, data: bytes, overwrite: bool = True):
-        if path is str:
-            return self.write_file(path.split("/"), data, overwrite=overwrite)
-
+    def write_file(self, path: list[str], data: bytes, overwrite: bool = True):
         dir = self._read_dir(path[:-1], mkdir=True)
         if dir is None:
             logger.error(f"Не удалось открыть папку '{path[:-1]}'.")
@@ -173,9 +164,6 @@ class CryptoFs:
         path.unlink(missing_ok=True)
 
     def remove(self, path: list[str] | str) -> None:
-        if path is str:
-            return self.remove(path.split("/"))
-
         dir = self._read_dir(path[:-1])
         if dir is None:
             logger.error(f"Не удалось открыть папку '{path[:-1]}'.")
