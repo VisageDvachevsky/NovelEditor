@@ -1,12 +1,6 @@
 import pytest
 
 from app.crypto_fs.CryptoFs import CryptoFs
-from app.crypto_fs.model.Root import Root
-
-
-@pytest.fixture
-def root():
-    return Root()
 
 
 @pytest.fixture

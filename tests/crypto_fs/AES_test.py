@@ -1,12 +1,4 @@
-import pytest
-
 from app.crypto_fs.AES import AES
-from app.crypto_fs.utility import random_key
-
-
-@pytest.fixture
-def key():
-    return random_key()
 
 
 def test_key_size():
