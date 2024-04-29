@@ -45,7 +45,10 @@ class SceneApp(BaseApp):
                 self.canvas.image = photo
 
                 logger.info("Изображение загружено успешно.")
+                return True
             else:
                 logger.error("Изображение с указанным ID не найдено.")
+                return False
         else:
             logger.error("Введите ID изображения.")
+            return False
