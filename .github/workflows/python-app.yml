@@ -29,7 +29,4 @@ jobs:
     - name: Test with pytest
       uses: pavelzw/pytest-action@v2.1.0
       with:
-        custom-pytest:  |
-          export DISPLAY=:99
-          Xvfb :99 &
-          python -m pytest
+        custom-pytest: Xvfb :99 & DISPLAY=:99 pytest
