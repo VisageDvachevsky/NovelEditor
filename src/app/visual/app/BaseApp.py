@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 class BaseApp(tk.Frame, ABC):
     @staticmethod
     @abstractmethod
-    def title() -> str:
+    def title() -> str:  # pragma: no cover
         raise NotImplementedError
 
     @abstractmethod
