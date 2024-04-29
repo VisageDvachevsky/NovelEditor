@@ -6,27 +6,31 @@ from PIL import Image, ImageTk
 from loguru import logger
 
 from app.image_manager.ImageManager import ImageManager
+from app.visual.app.BaseApp import BaseApp
 
 
-class SceneApp:
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Сцена с изображением")
+class SceneApp(BaseApp):
+    @staticmethod
+    def title() -> str:
+        return "Сцена с изображением"
+
+    def __init__(self, master: tk.Tk = None, **kwargs: dict):
+        super().__init__(master, **kwargs)
 
         self.image_manager = ImageManager()
 
-        self.canvas = tk.Canvas(self.master, width=400, height=300)
+        self.canvas = tk.Canvas(self, width=400, height=300)
         self.canvas.pack(pady=10)
 
         self.load_button = ttk.Button(
-            self.master, text="Загрузить изображение", command=self.load_image
+            self, text="Загрузить изображение", command=self.load_image
         )
         self.load_button.pack(pady=5)
 
-        self.id_label = ttk.Label(self.master, text="Введите ID изображения:")
+        self.id_label = ttk.Label(self, text="Введите ID изображения:")
         self.id_label.pack()
 
-        self.id_entry = ttk.Entry(self.master)
+        self.id_entry = ttk.Entry(self)
         self.id_entry.pack()
 
     def load_image(self):
@@ -41,7 +45,10 @@ class SceneApp:
                 self.canvas.image = photo
 
                 logger.info("Изображение загружено успешно.")
+                return True
             else:
                 logger.error("Изображение с указанным ID не найдено.")
+                return False
         else:
             logger.error("Введите ID изображения.")
+            return False

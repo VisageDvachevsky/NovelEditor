@@ -1,25 +1,19 @@
 import tkinter as tk
 
+from typing import Type
 from loguru import logger
 
-from app.visual.FsApp import FsApp
-from app.visual.ImageApp import ImageApp
-from app.visual.SceneApp import SceneApp
+from app.visual.app.BaseApp import BaseApp
+from app.visual.select_mode import select_mode
 
 
 def run(mode: str | None) -> None:
-    match mode:
-        case "scene":
-            app = SceneApp
-        case "image_app":
-            app = ImageApp
-        case "fs":
-            app = FsApp
-
-        case _:
-            logger.error(f"Неизвестный режим выполнения '{mode}'")
-            return
+    app: Type[BaseApp] = select_mode(mode)
+    if app is None:
+        logger.error(f"Неизвестный режим выполнения '{mode}'")
+        return
 
     root = tk.Tk()
-    app(root)
+    root.title(app.title())
+    app(root).pack(fill="both", expand=True)
     root.mainloop()
