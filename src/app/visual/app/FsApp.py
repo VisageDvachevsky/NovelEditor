@@ -1,17 +1,21 @@
-from tkinter import ttk
+from tkinter import ttk, Tk
 
 from app.crypto_fs.CryptoFs import CryptoFs
 from app.crypto_fs.load_root import load_root
+from app.visual.app.BaseApp import BaseApp
 
 
-class FsApp:
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Управление файлами")
+class FsApp(BaseApp):
+    @staticmethod
+    def title() -> str:
+        return "Управление файлами"
+
+    def __init__(self, master: Tk = None, **kwargs: dict):
+        super().__init__(master, **kwargs)
 
         self.fs = CryptoFs("data", load_root("key.key"))
 
-        self.tree = ttk.Treeview(self.master)
+        self.tree = ttk.Treeview(self)
         self.tree.pack(fill="both", expand=True)
 
         self.populate_tree([])
