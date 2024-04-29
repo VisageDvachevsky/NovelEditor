@@ -1,4 +1,17 @@
+from tkinter import Canvas
+
+import pytest
+
 from app.visual.app.SceneApp import SceneApp
+
+
+# TODO: Ugly fix
+@pytest.fixture(autouse=True)
+def mock_canvas_create_image(monkeypatch):
+    def dummy(*_, **__):
+        pass
+
+    monkeypatch.setattr(Canvas, "create_image", dummy)
 
 
 def test_scene_app_title():
