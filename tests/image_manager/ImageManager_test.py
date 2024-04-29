@@ -11,15 +11,6 @@ def im():
     return ImageManager("data", "key")
 
 
-@pytest.fixture
-def tmp_image(tmp_path):
-    tmp_path.mkdir(parents=True, exist_ok=True)
-    img_path = tmp_path / "img.png"
-    data = get_random_bytes(100)
-    img_path.write_bytes(data)
-    return img_path
-
-
 def test_image_manager_add_get(im, tmp_image):
     add = im.add_image(tmp_image, "hash")
     assert add

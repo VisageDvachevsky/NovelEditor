@@ -59,15 +59,20 @@ class ImageApp(BaseApp):
             if hasattr(self, "selected_image_path") and self.selected_image_path:
                 self.image_manager.add_image(self.selected_image_path, image_id)
                 logger.info(f"Изображение с ID {image_id} добавлено.")
+                return True
             else:
                 logger.error("Выберите изображение.")
+                return False
         else:
             logger.error("Введите ID изображения.")
+            return False
 
     def delete_image(self):
         image_id = self.id_entry.get()
         if image_id:
             self.image_manager.remove_image(image_id)
             logger.info(f"Изображение с ID {image_id} удалено.")
+            return True
         else:
             logger.error("Введите ID изображения.")
+            return False

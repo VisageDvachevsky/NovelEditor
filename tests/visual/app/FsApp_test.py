@@ -22,6 +22,10 @@ def extract_children(
     )
 
 
+def test_fs_app_title():
+    assert FsApp.title()
+
+
 def test_fs_app(root):
     file_structure = [
         ["a", "b", "c", "file"],
@@ -39,7 +43,3 @@ def test_fs_app(root):
 
     # TODO: order?
     assert file_structure == children
-
-
-def test_fs_app_title():
-    assert FsApp.title()
