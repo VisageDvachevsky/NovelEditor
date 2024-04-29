@@ -2,10 +2,10 @@ import tkinter as tk
 from abc import ABC, abstractmethod
 
 
-class BaseApp(tk.Frame, ABC):
+class BaseApp(tk.Frame, ABC):  # pragma: no cover
     @staticmethod
     @abstractmethod
-    def title() -> str:  # pragma: no cover
+    def title() -> str:
         raise NotImplementedError
 
     @abstractmethod

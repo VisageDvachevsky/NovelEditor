@@ -1,7 +1,7 @@
+import pytest
+
 from dataclasses import dataclass
 from tkinter import Tk
-
-import pytest
 
 from app.visual import run
 
