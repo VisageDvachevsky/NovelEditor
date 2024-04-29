@@ -25,10 +25,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest pytest-md pytest-emoji
         pip install -r requirements.txt
-    - name: TKInter fix
-      run: export DISPLAY=:99
 
     - name: Test with pytest
       uses: pavelzw/pytest-action@v2.1.0
       with:
-        custom-pytest: Xvfb :99 & python -m pytest
+        custom-pytest:  |
+          export DISPLAY=:99
+          Xvfb :99 &
+          python -m pytest
