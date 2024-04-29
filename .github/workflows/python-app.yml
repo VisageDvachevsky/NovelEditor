@@ -17,14 +17,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.12
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.12"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
+        pip install pytest pytest-md pytest-emoji
         pip install -r requirements.txt
+    - name: TKInter fix
+      run: export DISPLAY=:99
+
     - name: Test with pytest
-      run: |
-        pytest
+      uses: pavelzw/pytest-action@v2.1.0
+      with:
+        custom-pytest: Xvfb :99 & python -m pytest
