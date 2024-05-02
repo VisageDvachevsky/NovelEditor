@@ -15,12 +15,11 @@ class FsPreview(ft.Row):
         super().__init__()
 
         self._fs = fs
-        self._path = path
         self._on_path_change = on_path_change
 
         self._is_mounted = False
 
-        self._update_path()
+        self.set_path(path)
 
         self.spacing = 10
         self.wrap = True
@@ -32,24 +31,20 @@ class FsPreview(ft.Row):
         self._is_mounted = False
 
     def set_path(self, path: list[str]) -> None:
-        self._path = path
-        self._update_path()
-
-    def _update_path(self):
         self.controls.clear()
 
-        dir = self._fs.read_dir(path=self._path)
+        dir = self._fs.read_dir(path=path)
         if dir is not None:
 
-            def path_change(path: list[str]) -> None:
+            def path_change(p: list[str]) -> None:
                 if self._on_path_change:
-                    self._on_path_change(path)
+                    self._on_path_change(p)
 
             for name, item in dir.items():
 
                 def on_click(_, n=name, i=item) -> None:
                     if i.type == "dir":
-                        path_change(self._path + [n])
+                        path_change(path + [n])
 
                 self.controls.append(
                     ft.TextButton(
