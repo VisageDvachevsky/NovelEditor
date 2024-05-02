@@ -1,5 +1,5 @@
 import flet as ft
-from mopyx import model, computed, render
+from mopyx import model, render
 
 from app.ui.view.FileSystemView import FileSystemView
 from app.ui.view.ImageControlView import ImageControlView
@@ -10,19 +10,7 @@ class RootApp(ft.Row):
     @model
     class Model:
         def __init__(self) -> None:
-            self.selected_index = 0
-
-        @computed
-        def view(self) -> ft.Control:
-            match self.selected_index:
-                case 0:
-                    return ImageControlView()
-                case 1:
-                    return SceneView()
-                case 2:
-                    return FileSystemView()
-                case _:
-                    return ft.Text("Unknown index")
+            self.selected_index = 2
 
     def __init__(self) -> None:
         super().__init__()
@@ -56,12 +44,22 @@ class RootApp(ft.Row):
             on_change=lambda _: set_selected_index(self._rail.selected_index),
         )
 
-        self.controls = [self._rail, ft.VerticalDivider(), self._model.view]
+        self._views: list[ft.Control] = [
+            ImageControlView(),
+            SceneView(),
+            FileSystemView(),
+        ]
+
+        self.controls = [
+            self._rail,
+            ft.VerticalDivider(),
+            self._views[self._model.selected_index],
+        ]
 
     def did_mount(self) -> None:
-        self.render()
+        self._render()
 
     @render
-    def render(self) -> None:
-        self.controls[-1] = self._model.view
+    def _render(self) -> None:
+        self.controls[-1] = self._views[self._model.selected_index]
         self.update()
