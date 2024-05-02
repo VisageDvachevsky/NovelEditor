@@ -1,9 +1,9 @@
 import flet as ft
 
 
-class FileSystemView(ft.UserControl):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class FileSystemView(ft.ResponsiveRow):
+    def __init__(self):
+        super().__init__()
 
-    def build(self):
-        return ft.Text("FileSystemView")
+        self.expand = True
+        self.controls = [ft.Column(controls=[ft.Text("FileSystemView")])]

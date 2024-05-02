@@ -1,9 +1,9 @@
 import flet as ft
 
 
-class ImageControlView(ft.UserControl):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class ImageControlView(ft.ResponsiveRow):
+    def __init__(self):
+        super().__init__()
 
-    def build(self):
-        return ft.Text("ImageControlView")
+        self.expand = True
+        self.controls = [ft.Column(controls=[ft.Text("ImageControlView")])]

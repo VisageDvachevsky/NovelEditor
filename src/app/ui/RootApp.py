@@ -5,28 +5,11 @@ from app.ui.view.ImageControlView import ImageControlView
 from app.ui.view.SceneView import SceneView
 
 
-class RootApp(ft.UserControl):
+class RootApp(ft.Row):
     def __init__(self):
-        super().__init__(expand=True)
+        super().__init__()
 
-        self._selected_view: ft.Control = ImageControlView(expand=True)
-        self._row: ft.Row | None = None
-
-    def set_index(self, index: int) -> None:
-        match index:
-            case 0:
-                self._selected_view = ImageControlView(expand=True)
-            case 1:
-                self._selected_view = SceneView(expand=True)
-            case 2:
-                self._selected_view = FileSystemView(expand=True)
-            case _:
-                self._selected_view = ft.Text("Unknown index")
-
-        self._row.controls[-1] = self._selected_view
-        self.update()
-
-    def build(self):
+        self.expand = True
 
         rail = ft.NavigationRail(
             selected_index=0,
@@ -50,10 +33,20 @@ class RootApp(ft.UserControl):
             ],
             on_change=lambda e: self.set_index(e.control.selected_index),
         )
+        self._selected_view: ft.Control = ImageControlView()
 
-        self._row = ft.Row(
-            [rail, ft.VerticalDivider(width=1), self._selected_view],
-            expand=True,
-        )
+        self.controls = [rail, ft.VerticalDivider(), self._selected_view]
 
-        return self._row
+    def set_index(self, index: int) -> None:
+        match index:
+            case 0:
+                self._selected_view = ImageControlView()
+            case 1:
+                self._selected_view = SceneView()
+            case 2:
+                self._selected_view = FileSystemView()
+            case _:
+                self._selected_view = ft.Text("Unknown index")
+
+        self.controls[-1] = self._selected_view
+        self.update()

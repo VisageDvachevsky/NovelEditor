@@ -1,9 +1,9 @@
 import flet as ft
 
 
-class SceneView(ft.UserControl):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class SceneView(ft.ResponsiveRow):
+    def __init__(self):
+        super().__init__()
 
-    def build(self):
-        return ft.Text("SceneView")
+        self.expand = True
+        self.controls = [ft.Column(controls=[ft.Text("SceneView")])]
