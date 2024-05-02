@@ -1,4 +1,5 @@
 import flet as ft
+from mopyx import model, computed, render
 
 from app.ui.view.FileSystemView import FileSystemView
 from app.ui.view.ImageControlView import ImageControlView
@@ -6,47 +7,61 @@ from app.ui.view.SceneView import SceneView
 
 
 class RootApp(ft.Row):
+    @model
+    class Model:
+        def __init__(self):
+            self.selected_index = 0
+
+        @computed
+        def view(self):
+            match self.selected_index:
+                case 0:
+                    return ImageControlView()
+                case 1:
+                    return SceneView()
+                case 2:
+                    return FileSystemView()
+                case _:
+                    return ft.Text("Unknown index")
+
     def __init__(self):
         super().__init__()
-
         self.expand = True
 
-        rail = ft.NavigationRail(
-            selected_index=0,
+        self._model = self.Model()
+
+        def set_selected_index(index):
+            self._model.selected_index = index
+
+        self._rail = ft.NavigationRail(
+            selected_index=self._model.selected_index,
             min_width=100,
             destinations=[
                 ft.NavigationRailDestination(
-                    icon_content=ft.Icon(ft.icons.IMAGE_OUTLINED),
-                    selected_icon_content=ft.Icon(ft.icons.IMAGE),
+                    icon=ft.icons.IMAGE_OUTLINED,
+                    selected_icon=ft.icons.IMAGE,
                     label="Управление Изображениями",
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.icons.CAMERA_ROLL_OUTLINED,
-                    selected_icon_content=ft.Icon(ft.icons.CAMERA_ROLL),
+                    selected_icon=ft.icons.CAMERA_ROLL,
                     label_content=ft.Text("Сцена"),
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.icons.FILE_OPEN_OUTLINED,
-                    selected_icon_content=ft.Icon(ft.icons.FILE_OPEN),
+                    selected_icon=ft.icons.FILE_OPEN,
                     label_content=ft.Text("Файловая Система"),
                 ),
             ],
-            on_change=lambda e: self.set_index(e.control.selected_index),
+            on_change=lambda _: set_selected_index(self._rail.selected_index),
         )
-        self._selected_view: ft.Control = ImageControlView()
 
-        self.controls = [rail, ft.VerticalDivider(), self._selected_view]
+        self.controls = [self._rail, ft.VerticalDivider(), self._model.view]
 
-    def set_index(self, index: int) -> None:
-        match index:
-            case 0:
-                self._selected_view = ImageControlView()
-            case 1:
-                self._selected_view = SceneView()
-            case 2:
-                self._selected_view = FileSystemView()
-            case _:
-                self._selected_view = ft.Text("Unknown index")
+    def did_mount(self) -> None:
+        self.render()
 
-        self.controls[-1] = self._selected_view
+    @render
+    def render(self) -> None:
+        self.controls[-1] = self._model.view
         self.update()
