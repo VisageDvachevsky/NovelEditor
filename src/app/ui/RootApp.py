@@ -9,11 +9,11 @@ from app.ui.view.SceneView import SceneView
 class RootApp(ft.Row):
     @model
     class Model:
-        def __init__(self):
+        def __init__(self) -> None:
             self.selected_index = 0
 
         @computed
-        def view(self):
+        def view(self) -> ft.Control:
             match self.selected_index:
                 case 0:
                     return ImageControlView()
@@ -24,7 +24,7 @@ class RootApp(ft.Row):
                 case _:
                     return ft.Text("Unknown index")
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.expand = True
 
