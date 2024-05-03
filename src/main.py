@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import flet as ft
 
 from app.ui.RootApp import RootApp
@@ -8,4 +10,5 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.app(main)
+    assets_dir = Path(Path(__file__).parent, "assets")
+    ft.app(main, assets_dir=assets_dir)
