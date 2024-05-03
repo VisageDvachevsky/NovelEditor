@@ -1,50 +1,39 @@
-from typing import Callable
-
 import flet as ft
+from mopyx import action, render
 
 from app.crypto_fs.CryptoFs import CryptoFs
 
 
 class FsPreview(ft.Row):
-    def __init__(
-        self,
-        fs: CryptoFs,
-        path: list[str],
-        on_path_change: Callable[[list[str]], None] | None = None,
-    ):
+    def __init__(self, fs: CryptoFs, path: list[str]):
         super().__init__()
 
         self._fs = fs
-        self._on_path_change = on_path_change
-
-        self._is_mounted = False
-
-        self.set_path(path)
+        self._path = path
 
         self.spacing = 10
         self.wrap = True
 
     def did_mount(self) -> None:
-        self._is_mounted = True
+        self._render()
 
-    def did_umount(self) -> None:
-        self._is_mounted = False
+    @action
+    def set_path(self, val: list[str]):
+        self._path.clear()
+        self._path.extend(val)
 
-    def set_path(self, path: list[str]) -> None:
+    @render
+    def _render(self):
         self.controls.clear()
 
-        folder = self._fs.read_dir(path=path)
+        folder = self._fs.read_dir(path=self._path)
         if folder is not None:
-
-            def path_change(p: list[str]) -> None:
-                if self._on_path_change:
-                    self._on_path_change(p)
 
             for name, item in folder.items():
 
                 def on_click(_, n=name, i=item) -> None:
                     if i.type == "dir":
-                        path_change(path + [n])
+                        self.set_path(self._path + [n])
 
                 self.controls.append(
                     ft.TextButton(
@@ -58,5 +47,4 @@ class FsPreview(ft.Row):
                     )
                 )
 
-        if self._is_mounted:
-            self.update()
+        self.update()
