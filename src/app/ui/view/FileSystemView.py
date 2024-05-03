@@ -26,7 +26,12 @@ class FileSystemView(ft.Column):
             self._model.path.clear()
             self._model.path.extend(path)
 
-        self._path_bar = PathBar(path=self._model.path, on_path_change=on_path_change)
+        def on_upward(*_):
+            on_path_change(self._model.path[:-1] if len(self._model.path) > 0 else [])
+
+        self._path_bar = PathBar(
+            path=self._model.path, on_path_change=on_path_change, on_upward=on_upward
+        )
         self._fs_preview = FsPreview(
             fs=self.fs, path=self._model.path, on_path_change=on_path_change
         )

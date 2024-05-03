@@ -33,14 +33,14 @@ class FsPreview(ft.Row):
     def set_path(self, path: list[str]) -> None:
         self.controls.clear()
 
-        dir = self._fs.read_dir(path=path)
-        if dir is not None:
+        folder = self._fs.read_dir(path=path)
+        if folder is not None:
 
             def path_change(p: list[str]) -> None:
                 if self._on_path_change:
                     self._on_path_change(p)
 
-            for name, item in dir.items():
+            for name, item in folder.items():
 
                 def on_click(_, n=name, i=item) -> None:
                     if i.type == "dir":
