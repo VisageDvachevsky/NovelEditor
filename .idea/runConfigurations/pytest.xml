@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="pytest" type="tests" factoryName="py.test" nameIsGenerated="true">
+  <configuration default="false" name="pytest" type="tests" factoryName="py.test">
     <module name="NovelEditor" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />

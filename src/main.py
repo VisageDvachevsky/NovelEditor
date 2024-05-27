@@ -1,17 +1,14 @@
-import sys
+from pathlib import Path
 
-from loguru import logger
+import flet as ft
 
-from app.visual import run
-
-
-def main(args: list[str]) -> None:
-    if len(args) < 2:
-        logger.error("Не хватает параметров!")
-        return
-
-    run(args[1])
+from app.ui.RootApp import RootApp
 
 
-if __name__ == "__main__":  # pragma: no cover
-    main(sys.argv)
+def main(page: ft.Page):
+    page.add(RootApp())
+
+
+if __name__ == "__main__":
+    assets_dir = Path(Path(__file__).parent, "assets")
+    ft.app(main, assets_dir=assets_dir)
