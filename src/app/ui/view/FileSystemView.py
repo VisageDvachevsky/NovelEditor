@@ -1,5 +1,5 @@
 import flet as ft
-from mopyx import render, model, action
+from mopyx import model
 
 from app.crypto_fs.CryptoFs import CryptoFs
 from app.crypto_fs.load_root import load_root
@@ -14,10 +14,6 @@ class FileSystemView(ft.Column):
         def __init__(self) -> None:
             self.path = []
 
-        @action
-        def on_path_change(self, path: list[str]) -> None:
-            self.path = path
-
     def __init__(self):
         super().__init__()
 
@@ -31,14 +27,3 @@ class FileSystemView(ft.Column):
         self._fs_preview = FsPreview(self.fs, path_proxy)
 
         self.controls = [self._path_bar, ft.Divider(), self._fs_preview]
-
-    def did_mount(self) -> None:
-        self._render()
-
-    @render
-    def _render(self) -> None:
-        self._render_fs_preview()
-
-    @render(ignore_updates=True)
-    def _render_fs_preview(self) -> None:
-        self._fs_preview.set_path(self._model.path)
